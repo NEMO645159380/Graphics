@@ -3726,6 +3726,7 @@ namespace UnityEngine.Rendering.HighDefinition
                                 m_DbufferManager.GetBuffersRTI(),
                                 m_DbufferManager.GetRTHandles(),
                                 m_SharedRTManager.GetDepthStencilBuffer(),
+                                m_SharedRTManager.GetDepthTexture(),
                                 RendererList.Create(PrepareMeshDecalsRendererList(cullingResults, hdCamera, parameters.use4RTs)),
                                 m_DbufferManager.propertyMaskBuffer,
                                 m_SharedRTManager.GetDecalPrepassBuffer(hdCamera.frameSettings.IsEnabled(FrameSettingsField.MSAA)),
@@ -3848,6 +3849,7 @@ namespace UnityEngine.Rendering.HighDefinition
                                     RenderTargetIdentifier[]    mrt,
                                     RTHandle[]                  rtHandles,
                                     RTHandle                    depthStencilBuffer,
+                                    RTHandle                    depthTexture,
                                     RendererList                meshDecalsRendererList,
                                     ComputeBuffer               propertyMaskBuffer,
                                     RTHandle                    decalPrepassBuffer,
@@ -3891,6 +3893,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 cmd.SetGlobalTexture(HDShaderIDs._DecalPrepassTexture, decalPrepassBuffer);
             else
                 cmd.SetGlobalTexture(HDShaderIDs._DecalPrepassTexture, TextureXR.GetBlackTexture());
+
+            cmd.SetGlobalTexture(HDShaderIDs._CameraDepthTexture, depthTexture);
 
             HDUtils.DrawRendererList(renderContext, cmd, meshDecalsRendererList);
             DecalSystem.instance.RenderIntoDBuffer(cmd);
